@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  username  String   @unique
+  email     String?  @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quotation {
+  id           String          @id @default(cuid())
+  quotationNo  String          @unique
+  clientName   String
+  projectName  String?
+  description  String?
+  amount       Decimal         @default(0) @db.Decimal(15, 2)
+  status       QuotationStatus @default(DRAFT)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  jobHistories JobHistory[]
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+model JobHistory {
+  id          String     @id @default(cuid())
+  quotationId String?
+  quotation   Quotation? @relation(fields: [quotationId], references: [id])
+  jobName     String
+  clientName  String
+  startDate   DateTime?
+  endDate     DateTime?
+  description String?
+  amount      Decimal?   @db.Decimal(15, 2)
+  status      JobStatus  @default(IN_PROGRESS)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum JobStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model MasterData {
+  id        String   @id @default(cuid())
+  category  String
+  key       String
+  value     String
+  label     String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([category, key])
+}
