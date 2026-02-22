@@ -1,4 +1,5 @@
 import AppShell from "@/components/layout/AppShell";
+import HeroSlider from "@/components/home/HeroSlider";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -6,84 +7,76 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import LinkButton from "@/components/ui/LinkButton";
-import EngineeringIcon from "@mui/icons-material/Engineering";
-import DescriptionIcon from "@mui/icons-material/Description";
-import HistoryIcon from "@mui/icons-material/History";
-import StorageIcon from "@mui/icons-material/Storage";
+import AcUnitIcon from "@mui/icons-material/AcUnit";
+import OpacityIcon from "@mui/icons-material/Opacity";
+import ElectricalServicesIcon from "@mui/icons-material/ElectricalServices";
+import ConstructionIcon from "@mui/icons-material/Construction";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import HandymanIcon from "@mui/icons-material/Handyman";
+
+const services = [
+  {
+    no: 1,
+    icon: <AcUnitIcon sx={{ fontSize: 40 }} />,
+    title: "ติดตั้ง ซ่อมแซม และบำรุงรักษาระบบปรับอากาศ",
+    desc: "ให้บริการติดตั้ง ซ่อมแซม บำรุงรักษา ตรวจสอบ และปรับปรุงเครื่องปรับอากาศ ระบบทำความเย็น และระบบระบายอากาศทุกชนิด",
+    color: "#1565C0",
+  },
+  {
+    no: 2,
+    icon: <OpacityIcon sx={{ fontSize: 40 }} />,
+    title: "ล้าง ซ่อม และเติมสารทำความเย็น",
+    desc: "ให้บริการล้าง ซ่อม รีเช็ต รีชาร์จ ตรวจเช็ก และเติมสารทำความเย็นเครื่องปรับอากาศและระบบทำความเย็น",
+    color: "#0288D1",
+  },
+  {
+    no: 3,
+    icon: <ElectricalServicesIcon sx={{ fontSize: 40 }} />,
+    title: "ระบบไฟฟ้าและระบบควบคุมไฟฟ้า",
+    desc: "ให้บริการออกแบบ ติดตั้ง ซ่อมแซม และบำรุงรักษาระบบไฟฟ้า ระบบควบคุมไฟฟ้า และระบบไฟฟ้าภายในอาคาร",
+    color: "#F57C00",
+  },
+  {
+    no: 4,
+    icon: <ConstructionIcon sx={{ fontSize: 40 }} />,
+    title: "รับเหมางานระบบวิศวกรรมประกอบอาคาร",
+    desc: "รับเหมาติดตั้งงานระบบวิศวกรรมประกอบอาคาร ได้แก่ ระบบไฟฟ้า ระบบเครื่องกล ระบบปรับอากาศ และระบบที่เกี่ยวข้อง",
+    color: "#2E7D32",
+  },
+  {
+    no: 5,
+    icon: <StorefrontIcon sx={{ fontSize: 40 }} />,
+    title: "จำหน่ายเครื่องปรับอากาศและอุปกรณ์",
+    desc: "จำหน่าย จัดหา เครื่องปรับอากาศ อุปกรณ์ไฟฟ้า อุปกรณ์ทำความเย็น อะไหล่ และวัสดุที่เกี่ยวข้องกับกิจการ",
+    color: "#6A1B9A",
+  },
+  {
+    no: 6,
+    icon: <HandymanIcon sx={{ fontSize: 40 }} />,
+    title: "บริการอื่นที่เกี่ยวเนื่อง",
+    desc: "ประกอบกิจการอื่นใดที่เกี่ยวเนื่องหรือคล้ายคลึงกันกับกิจการดังกล่าว ทั้งนี้ไม่ขัดต่อกฎหมาย",
+    color: "#00695C",
+  },
+];
 
 export default function HomePage() {
   return (
     <AppShell noPadding>
-      {/* Hero Section */}
-      <Box
-        sx={{
-          background: "linear-gradient(135deg, #0D47A1 0%, #1565C0 50%, #1E88E5 100%)",
-          color: "#fff",
-          py: { xs: 8, md: 12 },
-          textAlign: "center",
-        }}
-      >
-        <Container maxWidth="md">
-          <EngineeringIcon sx={{ fontSize: 64, mb: 2, opacity: 0.9 }} />
-          <Typography variant="h3" fontWeight={700} gutterBottom>
-            NBA Tech Engineer
-          </Typography>
-          <Typography variant="h6" sx={{ opacity: 0.85, mb: 4, fontWeight: 300 }}>
-            ระบบจัดการใบเสนอราคาและประวัติการรับงานสำหรับวิศวกร
-          </Typography>
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
-            <LinkButton
-              href="/portfolio"
-              variant="outlined"
-              color="inherit"
-              size="large"
-              sx={{ borderColor: "rgba(255,255,255,0.6)", px: 4 }}
-            >
-              ดู Portfolio
-            </LinkButton>
-            <LinkButton
-              href="/login"
-              variant="contained"
-              size="large"
-              sx={{ bgcolor: "secondary.main", px: 4, "&:hover": { bgcolor: "secondary.dark" } }}
-            >
-              เข้าสู่ระบบ
-            </LinkButton>
-          </Box>
-        </Container>
-      </Box>
+      {/* Hero Slider */}
+      <HeroSlider />
 
-      {/* Features Section */}
+      {/* Services Section */}
       <Container maxWidth="lg" sx={{ py: 8 }}>
-        <Typography variant="h4" textAlign="center" gutterBottom fontWeight={600} color="primary">
-          ฟีเจอร์หลัก
+        <Typography variant="h4" textAlign="center" fontWeight={700} color="primary" gutterBottom>
+          บริการของเรา
         </Typography>
         <Typography variant="body1" textAlign="center" color="text.secondary" sx={{ mb: 6 }}>
-          ระบบครบวงจรสำหรับการจัดการงานวิศวกรรม
+          ให้บริการงานระบบวิศวกรรมครบวงจร โดยทีมช่างผู้เชี่ยวชาญ
         </Typography>
 
         <Grid container spacing={3}>
-          {[
-            {
-              icon: <DescriptionIcon sx={{ fontSize: 48, color: "primary.main" }} />,
-              title: "ใบเสนอราคา",
-              desc: "สร้าง ติดตาม และจัดการใบเสนอราคา (Quotation) ได้อย่างมีระบบ พร้อมสถานะการดำเนินการ",
-              href: "/quotation",
-            },
-            {
-              icon: <HistoryIcon sx={{ fontSize: 48, color: "secondary.main" }} />,
-              title: "ประวัติการรับงาน",
-              desc: "บันทึกและค้นหาประวัติการรับงานทั้งหมด พร้อมเชื่อมโยงกับใบเสนอราคา",
-              href: "/history-job",
-            },
-            {
-              icon: <StorageIcon sx={{ fontSize: 48, color: "success.main" }} />,
-              title: "ข้อมูลหลัก",
-              desc: "จัดการข้อมูลอ้างอิง (Master Data) ที่ใช้ในระบบ เช่น หมวดหมู่งาน ประเภทลูกค้า",
-              href: "/master-data",
-            },
-          ].map((item) => (
-            <Grid size={{ xs: 12, md: 4 }} key={item.title}>
+          {services.map((service) => (
+            <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={service.no}>
               <Card
                 sx={{
                   height: "100%",
@@ -94,17 +87,48 @@ export default function HomePage() {
                   },
                 }}
               >
-                <CardContent sx={{ textAlign: "center", p: 4 }}>
-                  {item.icon}
-                  <Typography variant="h6" fontWeight={600} sx={{ mt: 2, mb: 1 }}>
-                    {item.title}
+                <CardContent sx={{ p: 3, height: "100%", display: "flex", flexDirection: "column" }}>
+                  {/* Icon + number badge */}
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+                    <Box
+                      sx={{
+                        width: 64,
+                        height: 64,
+                        borderRadius: 2,
+                        bgcolor: `${service.color}15`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: service.color,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {service.icon}
+                    </Box>
+                    <Box
+                      sx={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: "50%",
+                        bgcolor: service.color,
+                        color: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: 13,
+                        fontWeight: 700,
+                        flexShrink: 0,
+                      }}
+                    >
+                      {service.no}
+                    </Box>
+                  </Box>
+                  <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1, lineHeight: 1.4 }}>
+                    {service.title}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-                    {item.desc}
+                  <Typography variant="body2" color="text.secondary" sx={{ lineHeight: 1.7 }}>
+                    {service.desc}
                   </Typography>
-                  <LinkButton href={item.href} variant="outlined" color="primary" size="small">
-                    ดูเพิ่มเติม
-                  </LinkButton>
                 </CardContent>
               </Card>
             </Grid>

@@ -8,6 +8,8 @@ import Divider from "@mui/material/Divider";
 import Avatar from "@mui/material/Avatar";
 import Chip from "@mui/material/Chip";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import BusinessIcon from "@mui/icons-material/Business";
+import BadgeIcon from "@mui/icons-material/Badge";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
@@ -82,9 +84,19 @@ export default function AboutPage() {
 
               {[
                 {
+                  icon: <BusinessIcon color="primary" />,
+                  label: "ชื่อบริษัท",
+                  value: "บริษัท เอ็นบีเอ เท็คแอนด์เอนจิเนียริ่ง จํากัด",
+                },
+                {
+                  icon: <BadgeIcon color="primary" />,
+                  label: "เลขนิติบุคคล",
+                  value: "0255569000605",
+                },
+                {
                   icon: <LocationOnIcon color="primary" />,
                   label: "ที่อยู่",
-                  value: "123 ถนนสุขุมวิท แขวงคลองเตย เขตคลองเตย กรุงเทพฯ 10110",
+                  value: "เลขที่ 185 หมู่ที่ 22 ตําบลเมืองเก่า อําเภอกบินทร์บุรี จังหวัดปราจีนบุรี 25240",
                 },
                 {
                   icon: <PhoneIcon color="primary" />,
@@ -94,7 +106,7 @@ export default function AboutPage() {
                 {
                   icon: <EmailIcon color="primary" />,
                   label: "อีเมล",
-                  value: "info@nba-tech.com",
+                  value: "nbatechengineering@gmail.com",
                 },
               ].map((item) => (
                 <Box key={item.label} sx={{ display: "flex", gap: 2, mb: 3 }}>

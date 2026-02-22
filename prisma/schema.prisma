@@ -61,6 +61,26 @@ enum JobStatus {
   CANCELLED
 }
 
+model QuoteRequest {
+  id          String             @id @default(cuid())
+  contactName String
+  companyName String?
+  phone       String
+  email       String?
+  serviceType String
+  details     String
+  status      QuoteRequestStatus @default(NEW)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+}
+
+enum QuoteRequestStatus {
+  NEW
+  IN_PROGRESS
+  REPLIED
+  CLOSED
+}
+
 model MasterData {
   id        String   @id @default(cuid())
   category  String

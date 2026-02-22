@@ -13,7 +13,8 @@
       "Bash(curl:*)",
       "Bash(npm run build:*)",
       "Bash(taskkill:*)",
-      "Bash(cmd /c \"taskkill /F /IM node.exe\")"
+      "Bash(cmd /c \"taskkill /F /IM node.exe\")",
+      "Bash(cd \"D:/DoSomething/NBA\" && npm run db:push 2>&1)"
     ]
   }
 }

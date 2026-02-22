@@ -20,23 +20,26 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Image from "next/image";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import LoginIcon from "@mui/icons-material/Login";
-import EngineeringIcon from "@mui/icons-material/Engineering";
 import MenuIcon from "@mui/icons-material/Menu";
 import HomeIcon from "@mui/icons-material/Home";
 import WorkIcon from "@mui/icons-material/Work";
 import InfoIcon from "@mui/icons-material/Info";
+import AssignmentIcon from "@mui/icons-material/Assignment";
 import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
 import StorageIcon from "@mui/icons-material/Storage";
 import CloseIcon from "@mui/icons-material/Close";
+import { auth } from "@/lib/auth";
 
 const publicNavLinks = [
   { label: "หน้าแรก", href: "/", icon: <HomeIcon fontSize="small" /> },
   { label: "Portfolio", href: "/portfolio", icon: <WorkIcon fontSize="small" /> },
   { label: "เกี่ยวกับเรา", href: "/about", icon: <InfoIcon fontSize="small" /> },
+  { label: "ขอใบเสนอราคา", href: "/request-quote", icon: <AssignmentIcon fontSize="small" /> },
 ];
 
 const protectedNavLinks = [
@@ -97,10 +100,14 @@ export default function Navbar() {
               flexShrink: 0,
             }}
           >
-            <EngineeringIcon sx={{ fontSize: 28 }} />
-            <Typography variant="h6" fontWeight={700} noWrap>
-              NBA Tech
-            </Typography>
+            <Image
+              src="/logo_corp.webp"
+              alt="NBA Tech"
+              width={70}
+              height={36}
+              style={{ filter: "brightness(0) invert(1)", objectFit: "contain" }}
+              priority
+            />
           </Box>
 
           {/* Desktop Nav — hidden on mobile */}
@@ -220,10 +227,13 @@ export default function Navbar() {
             color: "#fff",
           }}
         >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <EngineeringIcon />
-            <Typography fontWeight={700}>NBA Tech</Typography>
-          </Box>
+          <Image
+            src="/logo_corp.webp"
+            alt="NBA Tech"
+            width={70}
+            height={32}
+            style={{ filter: "brightness(0) invert(1)", objectFit: "contain" }}
+          />
           <IconButton color="inherit" size="small" onClick={() => setDrawerOpen(false)}>
             <CloseIcon />
           </IconButton>
