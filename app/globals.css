@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --font-sarabun: "Sarabun", sans-serif;
@@ -8,6 +9,19 @@ body {
   font-family: var(--font-sarabun), var(--font-geist), sans-serif;
   background-color: #f5f7fa;
 }
+
+/* Leaflet map tiles — ensure correct stacking */
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-map-pane svg,
+.leaflet-map-pane canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer { position: absolute; }
+.leaflet-container { width: 100%; height: 100%; }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }

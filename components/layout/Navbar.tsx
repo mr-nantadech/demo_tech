@@ -33,6 +33,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
 import StorageIcon from "@mui/icons-material/Storage";
 import CloseIcon from "@mui/icons-material/Close";
+import RouteIcon from "@mui/icons-material/Route";
 import { auth } from "@/lib/auth";
 
 const publicNavLinks = [
@@ -40,6 +41,7 @@ const publicNavLinks = [
   { label: "Portfolio", href: "/portfolio", icon: <WorkIcon fontSize="small" /> },
   { label: "เกี่ยวกับเรา", href: "/about", icon: <InfoIcon fontSize="small" /> },
   { label: "ขอใบเสนอราคา", href: "/request-quote", icon: <AssignmentIcon fontSize="small" /> },
+  { label: "วางแผนเส้นทาง", href: "/map-planner", icon: <RouteIcon fontSize="small" /> },
 ];
 
 const protectedNavLinks = [

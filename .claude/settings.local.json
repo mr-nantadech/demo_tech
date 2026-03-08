@@ -14,7 +14,17 @@
       "Bash(npm run build:*)",
       "Bash(taskkill:*)",
       "Bash(cmd /c \"taskkill /F /IM node.exe\")",
-      "Bash(cd \"D:/DoSomething/NBA\" && npm run db:push 2>&1)"
+      "Bash(cd \"D:/DoSomething/NBA\" && npm run db:push 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git rm --cached .env.local 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git add .gitignore && git commit -m \"$\\(cat <<'EOF'\nsecurity: remove .env.local from tracking, fix .gitignore\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\" 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git add -A && git status --short 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git reset HEAD .claude/settings.local.json 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git push origin master 2>&1)",
+      "Bash(cd \"D:/DoSomething/NBA\" && git add package.json && git commit -m \"$\\(cat <<'EOF'\nfix: add prisma generate to build and postinstall for Vercel\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>\nEOF\n\\)\" && git push origin master 2>&1)",
+      "Bash(xargs grep:*)",
+      "Bash(npm list:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(sed:*)"
     ]
   }
 }
