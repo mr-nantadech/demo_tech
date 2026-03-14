@@ -1,5 +1,5 @@
 import AppShell from "@/components/layout/AppShell";
-import MasterDataTable from "@/components/master-data/MasterDataTable";
+import MasterDataTabs from "@/components/master-data/MasterDataTabs";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -18,7 +18,7 @@ export default function MasterDataPage() {
         </Typography>
       </Box>
       <Divider sx={{ mb: 3 }} />
-      <MasterDataTable />
+      <MasterDataTabs />
     </AppShell>
   );
 }

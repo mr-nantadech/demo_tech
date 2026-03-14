@@ -44,6 +44,7 @@ export default function JobHistoryTable() {
     setLoading(false);
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchJobs(); }, [fetchJobs]);
 
   const handleDelete = async () => {
@@ -79,7 +80,6 @@ export default function JobHistoryTable() {
               <TableRow>
                 <TableCell>ชื่องาน</TableCell>
                 <TableCell>ชื่อลูกค้า</TableCell>
-                <TableCell>เลขที่ใบเสนอราคา</TableCell>
                 <TableCell>วันที่เริ่ม</TableCell>
                 <TableCell>วันที่สิ้นสุด</TableCell>
                 <TableCell align="right">มูลค่า</TableCell>
@@ -90,13 +90,13 @@ export default function JobHistoryTable() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={8} align="center" sx={{ py: 6 }}>
+                  <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                     <CircularProgress size={32} />
                   </TableCell>
                 </TableRow>
               ) : filtered.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} align="center" sx={{ py: 6 }}>
+                  <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                     <Typography color="text.secondary">ไม่พบข้อมูล</Typography>
                   </TableCell>
                 </TableRow>
@@ -105,7 +105,6 @@ export default function JobHistoryTable() {
                   <TableRow key={row.id} hover>
                     <TableCell sx={{ fontWeight: 500 }}>{row.jobName}</TableCell>
                     <TableCell>{row.clientName}</TableCell>
-                    <TableCell>{row.quotation?.quotationNo || "-"}</TableCell>
                     <TableCell>{formatDate(row.startDate)}</TableCell>
                     <TableCell>{formatDate(row.endDate)}</TableCell>
                     <TableCell align="right">{row.amount ? formatCurrency(row.amount) : "-"}</TableCell>

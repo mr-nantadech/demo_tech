@@ -17,42 +17,21 @@ model User {
   name      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model Quotation {
-  id           String          @id @default(cuid())
-  quotationNo  String          @unique
-  clientName   String
-  projectName  String?
-  description  String?
-  amount       Decimal         @default(0) @db.Decimal(15, 2)
-  status       QuotationStatus @default(DRAFT)
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
-  jobHistories JobHistory[]
-}
-
-enum QuotationStatus {
-  DRAFT
-  SENT
-  APPROVED
-  REJECTED
-  CANCELLED
+  projectFiles ProjectFile[]
 }
 
 model JobHistory {
-  id          String     @id @default(cuid())
-  quotationId String?
-  quotation   Quotation? @relation(fields: [quotationId], references: [id])
-  jobName     String
-  clientName  String
-  startDate   DateTime?
-  endDate     DateTime?
-  description String?
-  amount      Decimal?   @db.Decimal(15, 2)
-  status      JobStatus  @default(IN_PROGRESS)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            String    @id @default(cuid())
+  jobName       String
+  clientName    String
+  startDate     DateTime?
+  endDate       DateTime?
+  description   String?
+  amount        Decimal?  @db.Decimal(15, 2)
+  status        JobStatus @default(IN_PROGRESS)
+  projectFileId String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 enum JobStatus {
@@ -93,4 +72,79 @@ model MasterData {
   updatedAt DateTime @updatedAt
 
   @@unique([category, key])
+}
+
+model ProjectFile {
+  id               String            @id @default(cuid())
+  projectCode      String            @unique
+  projectName      String
+  subject          String?
+  quotationNo      String?
+  revisionNo       String            @default("Rev.1")
+  quotationDate    DateTime?
+  customerName     String?
+  billTo           String?
+  dear             String?
+  supervisorName   String?
+  paymentTermsText String?
+  amountTextTh     String?
+  status           ProjectFileStatus @default(DRAFT)
+  subtotal         Decimal           @default(0) @db.Decimal(15, 2)
+  overheadPercent  Decimal           @default(0) @db.Decimal(5, 2)
+  overheadAmount   Decimal           @default(0) @db.Decimal(15, 2)
+  total            Decimal           @default(0) @db.Decimal(15, 2)
+  discount         Decimal           @default(0) @db.Decimal(15, 2)
+  grandTotal       Decimal           @default(0) @db.Decimal(15, 2)
+  createdById      String?
+  createdBy        User?             @relation(fields: [createdById], references: [id])
+  lines            ProjectFileLine[]
+  versions         ProjectFileVersion[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+enum ProjectFileStatus {
+  DRAFT
+  CONFIRMED
+  APPROVED
+}
+
+model ProjectFileLine {
+  id                String              @id @default(cuid())
+  projectFileId     String
+  projectFile       ProjectFile         @relation(fields: [projectFileId], references: [id], onDelete: Cascade)
+  sortOrder         Int                 @default(0)
+  lineType          ProjectFileLineType @default(ITEM)
+  itemNo            String?
+  description       String
+  quantity          Decimal?            @db.Decimal(15, 2)
+  unit              String?
+  materialUnitPrice Decimal?            @db.Decimal(15, 2)
+  materialAmount    Decimal?            @db.Decimal(15, 2)
+  laborUnitPrice    Decimal?            @db.Decimal(15, 2)
+  laborAmount       Decimal?            @db.Decimal(15, 2)
+  lineTotal         Decimal?            @db.Decimal(15, 2)
+  remark            String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([projectFileId, sortOrder])
+}
+
+enum ProjectFileLineType {
+  SECTION
+  ITEM
+  NOTE
+}
+
+model ProjectFileVersion {
+  id            String      @id @default(cuid())
+  projectFileId String
+  projectFile   ProjectFile @relation(fields: [projectFileId], references: [id], onDelete: Cascade)
+  versionNo     Int
+  snapshot      Json
+  pdfPath       String?
+  createdAt     DateTime    @default(now())
+
+  @@unique([projectFileId, versionNo])
 }

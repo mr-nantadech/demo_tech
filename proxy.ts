@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
 
-const protectedRoutes = ["/quotation", "/history-job", "/master-data"];
+const protectedRoutes = ["/project-files", "/history-job", "/master-data"];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -18,7 +18,7 @@ export default auth((req) => {
 
   // Redirect authenticated users away from login page
   if (pathname === "/login" && req.auth) {
-    return NextResponse.redirect(new URL("/quotation", req.url));
+    return NextResponse.redirect(new URL("/project-files", req.url));
   }
 
   return NextResponse.next();

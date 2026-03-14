@@ -10,7 +10,6 @@ export async function GET() {
 
   const jobs = await prisma.jobHistory.findMany({
     orderBy: { createdAt: "desc" },
-    include: { quotation: { select: { quotationNo: true } } },
   });
 
   return NextResponse.json(jobs);
@@ -23,7 +22,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json();
-  const { quotationId, jobName, clientName, startDate, endDate, description, amount, status } = body;
+  const { jobName, clientName, startDate, endDate, description, amount, status } = body;
 
   if (!jobName || !clientName) {
     return NextResponse.json(
@@ -34,7 +33,6 @@ export async function POST(req: NextRequest) {
 
   const job = await prisma.jobHistory.create({
     data: {
-      quotationId: quotationId || null,
       jobName,
       clientName,
       startDate: startDate ? new Date(startDate) : null,

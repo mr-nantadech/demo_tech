@@ -22,9 +22,9 @@ import EngineeringIcon from "@mui/icons-material/Engineering";
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/quotation";
+  const callbackUrl = searchParams.get("callbackUrl") || "/project-files";
 
-  const [username, setUsername] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ export default function LoginForm() {
     setError("");
 
     const result = await signIn("credentials", {
-      username,
+      identifier,
       password,
       redirect: false,
     });
@@ -94,10 +94,10 @@ export default function LoginForm() {
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               fullWidth
-              label="ชื่อผู้ใช้ (Username)"
+              label="ชื่อผู้ใช้ หรือ อีเมล"
               type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               required
               autoFocus
               autoComplete="username"

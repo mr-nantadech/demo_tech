@@ -14,7 +14,6 @@ export async function GET(
   const { id } = await params;
   const job = await prisma.jobHistory.findUnique({
     where: { id },
-    include: { quotation: true },
   });
 
   if (!job) {
@@ -35,12 +34,11 @@ export async function PUT(
 
   const { id } = await params;
   const body = await req.json();
-  const { quotationId, jobName, clientName, startDate, endDate, description, amount, status } = body;
+  const { jobName, clientName, startDate, endDate, description, amount, status } = body;
 
   const job = await prisma.jobHistory.update({
     where: { id },
     data: {
-      quotationId: quotationId || null,
       jobName,
       clientName,
       startDate: startDate ? new Date(startDate) : null,

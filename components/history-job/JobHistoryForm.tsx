@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
-import type { JobStatus, QuotationRow } from "@/types";
+import type { JobStatus } from "@/types";
 
 const STATUS_OPTIONS: { value: JobStatus; label: string }[] = [
   { value: "IN_PROGRESS", label: "กำลังดำเนินการ" },
@@ -23,22 +23,16 @@ export default function JobHistoryForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [quotations, setQuotations] = useState<QuotationRow[]>([]);
 
   const [form, setForm] = useState({
     jobName: "",
     clientName: "",
-    quotationId: "",
     startDate: "",
     endDate: "",
     description: "",
     amount: "",
     status: "IN_PROGRESS" as JobStatus,
   });
-
-  useEffect(() => {
-    fetch("/api/quotation").then((r) => r.json()).then(setQuotations);
-  }, []);
 
   const handleChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -54,7 +48,6 @@ export default function JobHistoryForm() {
       body: JSON.stringify({
         ...form,
         amount: form.amount ? parseFloat(form.amount) : null,
-        quotationId: form.quotationId || null,
       }),
     });
 
@@ -80,14 +73,6 @@ export default function JobHistoryForm() {
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField fullWidth label="ชื่อลูกค้า *" value={form.clientName} onChange={handleChange("clientName")} required />
-            </Grid>
-            <Grid size={{ xs: 12, sm: 6 }}>
-              <TextField fullWidth select label="ใบเสนอราคาที่เกี่ยวข้อง (ถ้ามี)" value={form.quotationId} onChange={handleChange("quotationId")}>
-                <MenuItem value=""><em>- ไม่ระบุ -</em></MenuItem>
-                {quotations.map((q) => (
-                  <MenuItem key={q.id} value={q.id}>{q.quotationNo} - {q.clientName}</MenuItem>
-                ))}
-              </TextField>
             </Grid>
             <Grid size={{ xs: 12, sm: 6 }}>
               <TextField fullWidth select label="สถานะ" value={form.status} onChange={handleChange("status")}>

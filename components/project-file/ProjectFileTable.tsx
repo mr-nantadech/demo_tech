@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Card from "@mui/material/Card";
 import Table from "@mui/material/Table";
@@ -10,11 +10,9 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import IconButton from "@mui/material/IconButton";
-import Chip from "@mui/material/Chip";
 import Tooltip from "@mui/material/Tooltip";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -22,59 +20,64 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
-import {
-  QuotationRow,
-  QUOTATION_STATUS_LABELS,
-  QUOTATION_STATUS_COLORS,
-} from "@/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
+import type { ProjectFileStatus } from "@/types";
 
-export default function QuotationTable() {
-  const [rows, setRows] = useState<QuotationRow[]>([]);
-  const [loading, setLoading] = useState(true);
+type Row = {
+  id: string;
+  projectCode: string;
+  projectName: string;
+  quotationDate: string | null;
+  status: ProjectFileStatus;
+  grandTotal: number;
+  updatedAt: string;
+};
+
+const STATUS_LABELS: Record<ProjectFileStatus, string> = {
+  DRAFT: "ฉบับร่าง",
+  CONFIRMED: "ยืนยันแล้ว",
+  APPROVED: "อนุมัติแล้ว",
+};
+
+const STATUS_COLORS: Record<ProjectFileStatus, "default" | "info" | "success"> = {
+  DRAFT: "default",
+  CONFIRMED: "info",
+  APPROVED: "success",
+};
+
+export default function ProjectFileTable({ initialRows }: { initialRows: Row[] }) {
+  const [rows, setRows] = useState<Row[]>(initialRows);
   const [search, setSearch] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const fetchQuotations = useCallback(async () => {
-    setLoading(true);
-    const res = await fetch("/api/quotation");
-    if (res.ok) {
-      const data = await res.json();
-      setRows(data);
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    fetchQuotations();
-  }, [fetchQuotations]);
-
   const handleDelete = async () => {
     if (!deleteId) return;
-    await fetch(`/api/quotation/${deleteId}`, { method: "DELETE" });
+    await fetch(`/api/project-files/${deleteId}`, { method: "DELETE" });
+    setRows((prev) => prev.filter((row) => row.id !== deleteId));
     setDeleteId(null);
-    fetchQuotations();
   };
 
-  const filtered = rows.filter(
-    (r) =>
-      r.quotationNo.toLowerCase().includes(search.toLowerCase()) ||
-      r.clientName.toLowerCase().includes(search.toLowerCase()) ||
-      (r.projectName || "").toLowerCase().includes(search.toLowerCase())
-  );
+  const filtered = rows.filter((row) => {
+    const q = search.toLowerCase();
+    return (
+      row.projectCode.toLowerCase().includes(q) ||
+      row.projectName.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <>
       <Box sx={{ mb: 2 }}>
         <TextField
-          placeholder="ค้นหาเลขที่, ชื่อลูกค้า, โครงการ..."
+          placeholder="ค้นหาเลขที่ไฟล์ หรือ ชื่อโครงการ..."
+          size="small"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          size="small"
-          sx={{ width: 320 }}
+          sx={{ width: 360 }}
           InputProps={{ startAdornment: <SearchIcon sx={{ mr: 1, color: "action.active" }} /> }}
         />
       </Box>
@@ -85,22 +88,16 @@ export default function QuotationTable() {
             <TableHead>
               <TableRow>
                 <TableCell>เลขที่ใบเสนอราคา</TableCell>
-                <TableCell>ชื่อลูกค้า</TableCell>
                 <TableCell>ชื่อโครงการ</TableCell>
-                <TableCell align="right">มูลค่า (บาท)</TableCell>
+                <TableCell>วันที่เอกสาร</TableCell>
+                <TableCell align="right">มูลค่ารวม</TableCell>
                 <TableCell align="center">สถานะ</TableCell>
-                <TableCell>วันที่สร้าง</TableCell>
+                <TableCell>อัปเดตล่าสุด</TableCell>
                 <TableCell align="center">จัดการ</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
-                    <CircularProgress size={32} />
-                  </TableCell>
-                </TableRow>
-              ) : filtered.length === 0 ? (
+              {filtered.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center" sx={{ py: 6 }}>
                     <Typography color="text.secondary">ไม่พบข้อมูล</Typography>
@@ -109,23 +106,25 @@ export default function QuotationTable() {
               ) : (
                 filtered.map((row) => (
                   <TableRow key={row.id} hover>
-                    <TableCell sx={{ fontWeight: 500 }}>{row.quotationNo}</TableCell>
-                    <TableCell>{row.clientName}</TableCell>
-                    <TableCell>{row.projectName || "-"}</TableCell>
-                    <TableCell align="right">{formatCurrency(row.amount)}</TableCell>
+                    <TableCell sx={{ fontFamily: "monospace", fontWeight: 600 }}>
+                      {row.projectCode}
+                    </TableCell>
+                    <TableCell>{row.projectName}</TableCell>
+                    <TableCell>{formatDate(row.quotationDate)}</TableCell>
+                    <TableCell align="right">{formatCurrency(row.grandTotal)}</TableCell>
                     <TableCell align="center">
                       <Chip
-                        label={QUOTATION_STATUS_LABELS[row.status]}
-                        color={QUOTATION_STATUS_COLORS[row.status] as "default" | "info" | "success" | "error" | "warning"}
                         size="small"
+                        label={STATUS_LABELS[row.status]}
+                        color={STATUS_COLORS[row.status]}
                       />
                     </TableCell>
-                    <TableCell>{formatDate(row.createdAt)}</TableCell>
+                    <TableCell>{formatDate(row.updatedAt)}</TableCell>
                     <TableCell align="center">
-                      <Tooltip title="ดูรายละเอียด">
+                      <Tooltip title="เปิดแก้ไข">
                         <IconButton
                           component={Link}
-                          href={`/quotation/${row.id}`}
+                          href={`/project-files/${row.id}`}
                           size="small"
                           color="primary"
                         >
@@ -150,12 +149,11 @@ export default function QuotationTable() {
         </TableContainer>
       </Card>
 
-      {/* Confirm Delete Dialog */}
       <Dialog open={Boolean(deleteId)} onClose={() => setDeleteId(null)}>
         <DialogTitle>ยืนยันการลบ</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            คุณต้องการลบใบเสนอราคานี้ใช่หรือไม่? การกระทำนี้ไม่สามารถย้อนกลับได้
+            ต้องการลบใบเสนอราคานี้ใช่หรือไม่? การลบไม่สามารถย้อนกลับได้
           </DialogContentText>
         </DialogContent>
         <DialogActions>

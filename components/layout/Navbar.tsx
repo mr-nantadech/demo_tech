@@ -29,12 +29,11 @@ import HomeIcon from "@mui/icons-material/Home";
 import WorkIcon from "@mui/icons-material/Work";
 import InfoIcon from "@mui/icons-material/Info";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import DescriptionIcon from "@mui/icons-material/Description";
 import HistoryIcon from "@mui/icons-material/History";
 import StorageIcon from "@mui/icons-material/Storage";
+import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import CloseIcon from "@mui/icons-material/Close";
 import RouteIcon from "@mui/icons-material/Route";
-import { auth } from "@/lib/auth";
 
 const publicNavLinks = [
   { label: "หน้าแรก", href: "/", icon: <HomeIcon fontSize="small" /> },
@@ -45,7 +44,7 @@ const publicNavLinks = [
 ];
 
 const protectedNavLinks = [
-  { label: "ใบเสนอราคา", href: "/quotation", icon: <DescriptionIcon fontSize="small" /> },
+  { label: "ใบเสนอราคา", href: "/project-files", icon: <FolderCopyIcon fontSize="small" /> },
   { label: "ประวัติงาน", href: "/history-job", icon: <HistoryIcon fontSize="small" /> },
   { label: "ข้อมูลหลัก", href: "/master-data", icon: <StorageIcon fontSize="small" /> },
 ];

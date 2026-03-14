@@ -1,27 +1,7 @@
-export type QuotationStatus =
-  | "DRAFT"
-  | "SENT"
-  | "APPROVED"
-  | "REJECTED"
-  | "CANCELLED";
-
 export type JobStatus = "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
-
-export interface QuotationRow {
-  id: string;
-  quotationNo: string;
-  clientName: string;
-  projectName: string | null;
-  description: string | null;
-  amount: number;
-  status: QuotationStatus;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export interface JobHistoryRow {
   id: string;
-  quotationId: string | null;
   jobName: string;
   clientName: string;
   startDate: string | null;
@@ -31,7 +11,6 @@ export interface JobHistoryRow {
   status: JobStatus;
   createdAt: string;
   updatedAt: string;
-  quotation?: { quotationNo: string } | null;
 }
 
 export interface MasterDataRow {
@@ -46,26 +25,10 @@ export interface MasterDataRow {
   updatedAt: string;
 }
 
-export const QUOTATION_STATUS_LABELS: Record<QuotationStatus, string> = {
-  DRAFT: "ร่าง",
-  SENT: "ส่งแล้ว",
-  APPROVED: "อนุมัติ",
-  REJECTED: "ปฏิเสธ",
-  CANCELLED: "ยกเลิก",
-};
-
 export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
   IN_PROGRESS: "กำลังดำเนินการ",
   COMPLETED: "เสร็จสิ้น",
   CANCELLED: "ยกเลิก",
-};
-
-export const QUOTATION_STATUS_COLORS: Record<QuotationStatus, string> = {
-  DRAFT: "default",
-  SENT: "info",
-  APPROVED: "success",
-  REJECTED: "error",
-  CANCELLED: "warning",
 };
 
 export const JOB_STATUS_COLORS: Record<JobStatus, string> = {
@@ -73,3 +36,49 @@ export const JOB_STATUS_COLORS: Record<JobStatus, string> = {
   COMPLETED: "success",
   CANCELLED: "error",
 };
+
+export type ProjectFileStatus = "DRAFT" | "CONFIRMED" | "APPROVED";
+export type ProjectFileLineType = "SECTION" | "ITEM" | "NOTE";
+
+export interface ProjectFileLineRow {
+  id?: string;
+  sortOrder: number;
+  lineType: ProjectFileLineType;
+  itemNo: string;
+  description: string;
+  quantity: number | null;
+  unit: string | null;
+  materialUnitPrice: number | null;
+  materialAmount: number | null;
+  laborUnitPrice: number | null;
+  laborAmount: number | null;
+  lineTotal: number | null;
+  remark: string | null;
+}
+
+export interface ProjectFileRow {
+  id: string;
+  projectCode: string;
+  projectName: string;
+  subject: string | null;
+  quotationNo: string | null;
+  revisionNo: string;
+  quotationDate: string | null;
+  customerName: string | null;
+  billTo: string | null;
+  dear: string | null;
+  supervisorName: string | null;
+  paymentTermsText: string | null;
+  amountTextTh: string | null;
+  status: ProjectFileStatus;
+  subtotal: number;
+  overheadPercent: number;
+  overheadAmount: number;
+  total: number;
+  discount: number;
+  grandTotal: number;
+  lines: ProjectFileLineRow[];
+  versions?: { id: string; versionNo: number; pdfPath: string | null; createdAt: string }[];
+  createdAt?: string;
+  updatedAt?: string;
+}
