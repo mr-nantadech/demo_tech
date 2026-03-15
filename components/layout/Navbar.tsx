@@ -34,18 +34,20 @@ import StorageIcon from "@mui/icons-material/Storage";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
 import CloseIcon from "@mui/icons-material/Close";
 import RouteIcon from "@mui/icons-material/Route";
+import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 
 const publicNavLinks = [
   { label: "หน้าแรก", href: "/", icon: <HomeIcon fontSize="small" /> },
-  { label: "Portfolio", href: "/portfolio", icon: <WorkIcon fontSize="small" /> },
+  { label: "ผลงาน", href: "/portfolio", icon: <WorkIcon fontSize="small" /> },
   { label: "เกี่ยวกับเรา", href: "/about", icon: <InfoIcon fontSize="small" /> },
   { label: "ขอใบเสนอราคา", href: "/request-quote", icon: <AssignmentIcon fontSize="small" /> },
-  { label: "วางแผนเส้นทาง", href: "/map-planner", icon: <RouteIcon fontSize="small" /> },
 ];
 
 const protectedNavLinks = [
   { label: "ใบเสนอราคา", href: "/project-files", icon: <FolderCopyIcon fontSize="small" /> },
   { label: "ประวัติงาน", href: "/history-job", icon: <HistoryIcon fontSize="small" /> },
+  { label: "อัลบั้ม", href: "/album", icon: <PhotoLibraryIcon fontSize="small" /> },
+  { label: "วางแผนเส้นทาง", href: "/map-planner", icon: <RouteIcon fontSize="small" /> },
   { label: "ข้อมูลหลัก", href: "/master-data", icon: <StorageIcon fontSize="small" /> },
 ];
 

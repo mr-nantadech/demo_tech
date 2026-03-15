@@ -25,7 +25,8 @@
       "Bash(npm list:*)",
       "Bash(npm uninstall:*)",
       "Bash(sed:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(cd:*)"
     ]
   }
 }
