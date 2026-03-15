@@ -13,8 +13,36 @@ import BadgeIcon from "@mui/icons-material/Badge";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
+import { prisma } from "@/lib/prisma";
 
-export default function AboutPage() {
+export const metadata = { title: "เกี่ยวกับเรา | NBA Tech Engineer" };
+
+export default async function AboutPage() {
+  const rows = await prisma.masterData.findMany({
+    where: {
+      category: "COMPANY_PROFILE",
+      key: { in: ["COMPANY_NAME", "REGISTRATION_NO", "ADDRESS", "PHONE", "EMAIL"] },
+      isActive: true,
+    },
+  });
+  const byKey = new Map(rows.map((r) => [r.key, r.value]));
+
+  const company = {
+    name: byKey.get("COMPANY_NAME") ?? "",
+    registrationNo: byKey.get("REGISTRATION_NO") ?? "",
+    address: byKey.get("ADDRESS") ?? "",
+    phone: byKey.get("PHONE") ?? "",
+    email: byKey.get("EMAIL") ?? "",
+  };
+
+  const contactItems = [
+    { icon: <BusinessIcon color="primary" />, label: "ชื่อบริษัท", value: company.name },
+    { icon: <BadgeIcon color="primary" />, label: "เลขนิติบุคคล", value: company.registrationNo },
+    { icon: <LocationOnIcon color="primary" />, label: "ที่อยู่", value: company.address },
+    { icon: <PhoneIcon color="primary" />, label: "โทรศัพท์", value: company.phone },
+    ...(company.email ? [{ icon: <EmailIcon color="primary" />, label: "อีเมล", value: company.email }] : []),
+  ].filter((item) => item.value);
+
   return (
     <AppShell>
       <Box sx={{ mb: 4 }}>
@@ -38,7 +66,7 @@ export default function AboutPage() {
                 </Avatar>
                 <Box>
                   <Typography variant="h5" fontWeight={700}>
-                    NBA Tech Engineer
+                    {company.name || "NBA Tech Engineer"}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     บริษัทวิศวกรรมชั้นนำ
@@ -82,43 +110,23 @@ export default function AboutPage() {
               </Typography>
               <Divider sx={{ mb: 3 }} />
 
-              {[
-                {
-                  icon: <BusinessIcon color="primary" />,
-                  label: "ชื่อบริษัท",
-                  value: "บริษัท เอ็นบีเอ เท็คแอนด์เอนจิเนียริ่ง จํากัด",
-                },
-                {
-                  icon: <BadgeIcon color="primary" />,
-                  label: "เลขนิติบุคคล",
-                  value: "0255569000605",
-                },
-                {
-                  icon: <LocationOnIcon color="primary" />,
-                  label: "ที่อยู่",
-                  value: "เลขที่ 185 หมู่ที่ 22 ตําบลเมืองเก่า อําเภอกบินทร์บุรี จังหวัดปราจีนบุรี 25240",
-                },
-                {
-                  icon: <PhoneIcon color="primary" />,
-                  label: "โทรศัพท์",
-                  value: "02-xxx-xxxx",
-                },
-                {
-                  icon: <EmailIcon color="primary" />,
-                  label: "อีเมล",
-                  value: "nbatechengineering@gmail.com",
-                },
-              ].map((item) => (
-                <Box key={item.label} sx={{ display: "flex", gap: 2, mb: 3 }}>
-                  {item.icon}
-                  <Box>
-                    <Typography variant="caption" color="text.secondary">
-                      {item.label}
-                    </Typography>
-                    <Typography variant="body2">{item.value}</Typography>
+              {contactItems.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">
+                  ยังไม่มีข้อมูลติดต่อ
+                </Typography>
+              ) : (
+                contactItems.map((item) => (
+                  <Box key={item.label} sx={{ display: "flex", gap: 2, mb: 3 }}>
+                    {item.icon}
+                    <Box>
+                      <Typography variant="caption" color="text.secondary">
+                        {item.label}
+                      </Typography>
+                      <Typography variant="body2">{item.value}</Typography>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
+                ))
+              )}
             </CardContent>
           </Card>
         </Grid>

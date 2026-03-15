@@ -795,13 +795,25 @@ export default function ProjectFileEditor({
             <Typography variant="subtitle1" fontWeight={700} sx={{ mb: 1 }}>
               เวอร์ชัน PDF ล่าสุด
             </Typography>
-            {versions.map((v) => (
-              <Box key={v.id} sx={{ mb: 0.5 }}>
-                <a href={v.pdfPath || "#"} target="_blank" rel="noreferrer">
-                  Version {v.versionNo} - {new Date(v.createdAt).toLocaleString("th-TH")}
-                </a>
-              </Box>
-            ))}
+            {versions.map((v) => {
+              const isAvailable = v.pdfPath?.startsWith("http");
+              return (
+                <Box key={v.id} sx={{ mb: 0.5 }}>
+                  {isAvailable ? (
+                    <a href={v.pdfPath!} target="_blank" rel="noreferrer">
+                      Version {v.versionNo} — {new Date(v.createdAt).toLocaleString("th-TH")}
+                    </a>
+                  ) : (
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "text.disabled", textDecoration: "line-through" }}
+                    >
+                      Version {v.versionNo} — {new Date(v.createdAt).toLocaleString("th-TH")} (ไม่พร้อมใช้งาน)
+                    </Typography>
+                  )}
+                </Box>
+              );
+            })}
           </CardContent>
         </Card>
       )}

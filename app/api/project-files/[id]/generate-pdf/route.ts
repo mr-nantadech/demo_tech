@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { generateProjectFilePdf } from "@/lib/project-file-pdf";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { put } from "@vercel/blob";
 import { formatApiError } from "@/lib/api-error";
 
 function sanitizeFilename(value: string) {
@@ -89,12 +88,12 @@ export async function POST(
     };
 
     const pdfBytes = await generateProjectFilePdf({ ...snapshot });
-    const outputDir = path.join(process.cwd(), "public", "generated", "project-files");
-    await mkdir(outputDir, { recursive: true });
     const fileName = `${sanitizeFilename(project.projectCode)}-v${nextVersionNo}.pdf`;
-    const outputPath = path.join(outputDir, fileName);
-    await writeFile(outputPath, Buffer.from(pdfBytes));
-    const publicPath = `/generated/project-files/${fileName}`;
+    const blob = await put(`project-files/${fileName}`, Buffer.from(pdfBytes), {
+      access: "public",
+      contentType: "application/pdf",
+    });
+    const publicPath = blob.url;
 
     await prisma.projectFileVersion.create({
       data: {
