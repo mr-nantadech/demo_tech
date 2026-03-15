@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { put } from "@vercel/blob";
 import sharp from "sharp";
 
 type Params = { params: Promise<{ id: string }> };
@@ -18,20 +18,19 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const formData = await req.formData();
   const files = formData.getAll("file") as File[];
-
   if (!files.length) return NextResponse.json({ error: "No files" }, { status: 400 });
-
-  const dir = path.join(process.cwd(), "public", "uploads", "albums", id);
-  await mkdir(dir, { recursive: true });
 
   const created = [];
   for (const file of files) {
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
-
     const webpBuffer = await sharp(buffer).webp({ quality: 85 }).toBuffer();
-    await writeFile(path.join(dir, filename), webpBuffer);
+
+    const filename = `albums/${id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
+
+    const blob = await put(filename, webpBuffer, {
+      access: "public",
+      contentType: "image/webp",
+    });
 
     const lastImage = await prisma.albumImage.findFirst({
       where: { albumId: id },
@@ -40,10 +39,11 @@ export async function POST(req: NextRequest, { params }: Params) {
     const sortOrder = (lastImage?.sortOrder ?? -1) + 1;
 
     const image = await prisma.albumImage.create({
-      data: { albumId: id, filename, sortOrder },
+      data: { albumId: id, url: blob.url, sortOrder },
     });
     created.push(image);
   }
 
+  revalidatePath("/portfolio");
   return NextResponse.json(created, { status: 201 });
 }

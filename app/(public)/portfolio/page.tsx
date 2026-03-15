@@ -6,7 +6,6 @@ import Divider from "@mui/material/Divider";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "ผลงาน | NBA Tech Engineer" };
-export const revalidate = 60;
 
 export default async function PortfolioPage() {
   const albums = await prisma.album.findMany({

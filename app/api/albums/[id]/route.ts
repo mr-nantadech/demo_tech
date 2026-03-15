@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { unlink, rmdir } from "node:fs/promises";
-import path from "node:path";
+import { del } from "@vercel/blob";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -38,6 +38,7 @@ export async function PUT(req: NextRequest, { params }: Params) {
     },
   });
 
+  revalidatePath("/portfolio");
   return NextResponse.json(album);
 }
 
@@ -53,21 +54,17 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   });
   if (!album) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  // Delete image files from disk
-  const dir = path.join(process.cwd(), "public", "uploads", "albums", id);
-  for (const img of album.images) {
+  // Delete blobs from Vercel Blob storage
+  const urls = album.images.map((img) => img.url).filter(Boolean);
+  if (urls.length > 0) {
     try {
-      await unlink(path.join(dir, img.filename));
+      await del(urls);
     } catch {
-      // ignore missing files
+      // ignore errors
     }
-  }
-  try {
-    await rmdir(dir);
-  } catch {
-    // ignore if dir not empty or not exists
   }
 
   await prisma.album.delete({ where: { id } });
+  revalidatePath("/portfolio");
   return NextResponse.json({ ok: true });
 }

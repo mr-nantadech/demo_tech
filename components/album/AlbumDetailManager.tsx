@@ -27,7 +27,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import SaveIcon from "@mui/icons-material/Save";
 
-type AlbumImage = { id: string; albumId: string; filename: string; sortOrder: number };
+type AlbumImage = { id: string; albumId: string; url: string; sortOrder: number };
 type Album = {
   id: string;
   title: string;
@@ -288,7 +288,7 @@ export default function AlbumDetailManager({ albumId }: { albumId: string }) {
                 >
                   <Box sx={{ position: "relative", aspectRatio: "1", overflow: "hidden" }}>
                     <NextImage
-                      src={`/uploads/albums/${albumId}/${image.filename}`}
+                      src={image.url}
                       alt=""
                       fill
                       sizes="(max-width: 600px) 50vw, (max-width: 900px) 33vw, 16vw"

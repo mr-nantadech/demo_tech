@@ -18,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-type AlbumImage = { id: string; filename: string };
+type AlbumImage = { id: string; url: string };
 type Album = {
   id: string;
   title: string;
@@ -137,7 +137,7 @@ export default function PortfolioView({ albums }: { albums: Album[] }) {
                     }}
                   >
                     <NextImage
-                      src={`/uploads/albums/${album.id}/${image.filename}`}
+                      src={image.url}
                       alt={`${album.title} รูปที่ ${idx + 1}`}
                       fill
                       sizes="(max-width: 600px) 50vw, (max-width: 900px) 33vw, 25vw"
@@ -163,7 +163,7 @@ export default function PortfolioView({ albums }: { albums: Album[] }) {
                     }}
                   >
                     <NextImage
-                      src={`/uploads/albums/${album.id}/${image.filename}`}
+                      src={image.url}
                       alt={`${album.title} รูปที่ ${idx + 1}`}
                       width={1200}
                       height={800}
@@ -266,7 +266,7 @@ export default function PortfolioView({ albums }: { albums: Album[] }) {
             >
               <NextImage
                 key={currentImage.id}
-                src={`/uploads/albums/${lightbox.albumId}/${currentImage.filename}`}
+                src={currentImage.url}
                 alt=""
                 fill
                 sizes="90vw"

@@ -164,7 +164,7 @@ model AlbumImage {
   id        String   @id @default(cuid())
   albumId   String
   album     Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
-  filename  String
+  url       String
   sortOrder Int      @default(0)
   createdAt DateTime @default(now())
 
