@@ -291,6 +291,7 @@ export default function AlbumDetailManager({ albumId }: { albumId: string }) {
                       src={image.url}
                       alt=""
                       fill
+                      unoptimized
                       sizes="(max-width: 600px) 50vw, (max-width: 900px) 33vw, 16vw"
                       style={{ objectFit: "cover" }}
                     />
