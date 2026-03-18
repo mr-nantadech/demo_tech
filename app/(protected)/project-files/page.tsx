@@ -8,6 +8,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "ใบเสนอราคา | NBA Tech Engineer" };
+export const dynamic = "force-dynamic";
 
 export default async function ProjectFilesPage() {
   const rows = await prisma.projectFile.findMany({
@@ -50,4 +51,3 @@ export default async function ProjectFilesPage() {
     </AppShell>
   );
 }
-

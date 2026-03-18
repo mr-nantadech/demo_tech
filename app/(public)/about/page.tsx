@@ -16,6 +16,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import { prisma } from "@/lib/prisma";
 
 export const metadata = { title: "เกี่ยวกับเรา | NBA Tech Engineer" };
+export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
   const rows = await prisma.masterData.findMany({
