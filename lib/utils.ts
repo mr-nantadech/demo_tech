@@ -17,6 +17,18 @@ export function formatDate(date: Date | string | null): string {
   }).format(d);
 }
 
+export function formatDateTime(date: Date | string | null): string {
+  if (!date) return "-";
+  const d = typeof date === "string" ? new Date(date) : date;
+  return new Intl.DateTimeFormat("th-TH", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
 function convertThaiInteger(num: number): string {
   if (num === 0) return "ศูนย์";
 

@@ -41,16 +41,18 @@ enum JobStatus {
 }
 
 model QuoteRequest {
-  id          String             @id @default(cuid())
-  contactName String
-  companyName String?
-  phone       String
-  email       String?
-  serviceType String
-  details     String
-  status      QuoteRequestStatus @default(NEW)
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id           String             @id @default(cuid())
+  contactName  String
+  companyName  String?
+  phone        String
+  email        String?
+  serviceType  String
+  details      String
+  internalNote String?
+  followUpAt   DateTime?
+  status       QuoteRequestStatus @default(NEW)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 }
 
 enum QuoteRequestStatus {

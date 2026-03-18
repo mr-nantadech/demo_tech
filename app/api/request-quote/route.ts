@@ -1,5 +1,27 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+
+export async function GET() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const rows = await prisma.quoteRequest.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+
+  const newCount = rows.filter((row) => row.status === "NEW").length;
+
+  return NextResponse.json({
+    rows,
+    summary: {
+      newCount,
+      total: rows.length,
+    },
+  });
+}
 
 export async function POST(req: Request) {
   try {

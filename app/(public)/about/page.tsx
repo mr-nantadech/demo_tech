@@ -14,19 +14,29 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import { prisma } from "@/lib/prisma";
+import {
+  ABOUT_CONTENT_CATEGORY,
+  buildAboutContent,
+  defaultAboutContent,
+} from "@/lib/about-content";
 
-export const metadata = { title: "เกี่ยวกับเรา | Demo Tech Engineer" };
+export const metadata = { title: "เกี่ยวกับเรา | NBA Tech Engineer" };
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
-  const rows = await prisma.masterData.findMany({
+  const companyRows = await prisma.masterData.findMany({
     where: {
       category: "COMPANY_PROFILE",
       key: { in: ["COMPANY_NAME", "REGISTRATION_NO", "ADDRESS", "PHONE", "EMAIL"] },
       isActive: true,
     },
   });
-  const byKey = new Map(rows.map((r) => [r.key, r.value]));
+  const aboutRows = await prisma.masterData.findMany({
+    where: { category: ABOUT_CONTENT_CATEGORY, isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
+  const byKey = new Map(companyRows.map((r) => [r.key, r.value]));
+  const content = aboutRows.length > 0 ? buildAboutContent(aboutRows) : defaultAboutContent;
 
   const company = {
     name: byKey.get("COMPANY_NAME") ?? "",
@@ -48,10 +58,10 @@ export default async function AboutPage() {
     <AppShell>
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" fontWeight={700} color="primary" gutterBottom>
-          เกี่ยวกับเรา
+          {content.pageTitle}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          Demo Tech Engineer - ผู้เชี่ยวชาญด้านวิศวกรรมไฟฟ้าและระบบอัตโนมัติ
+          {content.pageSubtitle}
         </Typography>
         <Divider sx={{ mt: 2 }} />
       </Box>
@@ -67,34 +77,23 @@ export default async function AboutPage() {
                 </Avatar>
                 <Box>
                   <Typography variant="h5" fontWeight={700}>
-                    {company.name || "Demo Tech Engineer"}
+                    {company.name || "NBA Tech Engineer"}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    บริษัทวิศวกรรมชั้นนำ
+                    {content.companyTagline}
                   </Typography>
                 </Box>
               </Box>
 
               <Typography variant="body1" sx={{ lineHeight: 1.8, mb: 3 }}>
-                เราคือทีมวิศวกรมืออาชีพที่มีประสบการณ์มากกว่า 10 ปี ในด้านวิศวกรรมไฟฟ้า
-                ระบบอัตโนมัติ และพลังงานทดแทน เราให้บริการออกแบบ ติดตั้ง และดูแลบำรุงรักษา
-                ระบบวิศวกรรมอย่างครบวงจร
+                {content.companyIntro}
               </Typography>
 
               <Typography variant="h6" fontWeight={600} gutterBottom>
-                ความเชี่ยวชาญ
+                {content.expertiseTitle}
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 3 }}>
-                {[
-                  "ระบบไฟฟ้ากำลัง",
-                  "PLC & Automation",
-                  "Solar Energy",
-                  "BMS",
-                  "UPS & Generator",
-                  "HVAC Control",
-                  "IoT Systems",
-                  "Engineering Design",
-                ].map((skill) => (
+                {content.expertiseItems.map((skill) => (
                   <Chip key={skill} label={skill} color="primary" variant="outlined" size="small" />
                 ))}
               </Box>

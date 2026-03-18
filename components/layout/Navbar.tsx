@@ -29,6 +29,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import WorkIcon from "@mui/icons-material/Work";
 import InfoIcon from "@mui/icons-material/Info";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
 import HistoryIcon from "@mui/icons-material/History";
 import StorageIcon from "@mui/icons-material/Storage";
 import FolderCopyIcon from "@mui/icons-material/FolderCopy";
@@ -47,6 +48,7 @@ const publicNavLinks = [
 
 const protectedNavLinks = [
   { label: "ใบเสนอราคา", href: "/project-files", icon: <FolderCopyIcon fontSize="small" /> },
+  { label: "คำขอใบเสนอราคา", href: "/request-quotes", icon: <RequestQuoteIcon fontSize="small" /> },
   { label: "ประวัติงาน", href: "/history-job", icon: <HistoryIcon fontSize="small" /> },
   { label: "อัลบั้ม", href: "/album", icon: <PhotoLibraryIcon fontSize="small" /> },
   { label: "วางแผนเส้นทาง", href: "/map-planner", icon: <RouteIcon fontSize="small" /> },
@@ -59,6 +61,7 @@ export default function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [logoSrc, setLogoSrc] = useState(defaultLogoSrc);
+  const [newQuoteCount, setNewQuoteCount] = useState(0);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -83,6 +86,35 @@ export default function Navbar() {
     void loadCompany();
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    if (!session) {
+      setNewQuoteCount(0);
+      return;
+    }
+
+    const controller = new AbortController();
+
+    const loadQuotes = async () => {
+      try {
+        const res = await fetch("/api/request-quote", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as {
+          summary?: { newCount?: number };
+        };
+        setNewQuoteCount(data.summary?.newCount ?? 0);
+      } catch {
+        // ignore badge errors
+      }
+    };
+
+    void loadQuotes();
+    return () => controller.abort();
+  }, [session]);
 
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
@@ -162,15 +194,32 @@ export default function Navbar() {
                   sx={{ mx: 1, borderColor: "rgba(255,255,255,0.3)" }}
                 />
                 {protectedNavLinks.map((link) => (
-                  <Button
-                    key={link.href}
-                    component={Link}
-                    href={link.href}
-                    color="inherit"
-                    sx={navButtonSx(link.href)}
-                  >
-                    {link.label}
-                  </Button>
+                  <Box key={link.href} sx={{ position: "relative", display: "inline-flex" }}>
+                    <Button
+                      component={Link}
+                      href={link.href}
+                      color="inherit"
+                      sx={navButtonSx(link.href)}
+                    >
+                      {link.label}
+                    </Button>
+                    {link.href === "/request-quotes" && newQuoteCount > 0 && (
+                      <Chip
+                        label={newQuoteCount}
+                        color="warning"
+                        size="small"
+                        sx={{
+                          position: "absolute",
+                          top: 2,
+                          right: -4,
+                          height: 18,
+                          minWidth: 18,
+                          fontSize: 11,
+                          fontWeight: 700,
+                        }}
+                      />
+                    )}
+                  </Box>
                 ))}
               </>
             )}
@@ -334,6 +383,14 @@ export default function Navbar() {
                     {link.icon}
                   </ListItemIcon>
                   <ListItemText primary={link.label} />
+                  {link.href === "/request-quotes" && newQuoteCount > 0 && (
+                    <Chip
+                      label={newQuoteCount}
+                      color="warning"
+                      size="small"
+                      sx={{ height: 20, minWidth: 20, fontSize: 11, fontWeight: 700 }}
+                    />
+                  )}
                 </ListItemButton>
               ))}
             </List>

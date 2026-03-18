@@ -1,4 +1,5 @@
 export type JobStatus = "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+export type QuoteRequestStatus = "NEW" | "IN_PROGRESS" | "REPLIED" | "CLOSED";
 
 export interface JobHistoryRow {
   id: string;
@@ -25,6 +26,21 @@ export interface MasterDataRow {
   updatedAt: string;
 }
 
+export interface QuoteRequestRow {
+  id: string;
+  contactName: string;
+  companyName: string | null;
+  phone: string;
+  email: string | null;
+  serviceType: string;
+  details: string;
+  internalNote: string | null;
+  followUpAt: string | null;
+  status: QuoteRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
   IN_PROGRESS: "กำลังดำเนินการ",
   COMPLETED: "เสร็จสิ้น",
@@ -35,6 +51,20 @@ export const JOB_STATUS_COLORS: Record<JobStatus, string> = {
   IN_PROGRESS: "info",
   COMPLETED: "success",
   CANCELLED: "error",
+};
+
+export const QUOTE_REQUEST_STATUS_LABELS: Record<QuoteRequestStatus, string> = {
+  NEW: "ใหม่",
+  IN_PROGRESS: "กำลังติดตาม",
+  REPLIED: "ตอบกลับแล้ว",
+  CLOSED: "ปิดงาน",
+};
+
+export const QUOTE_REQUEST_STATUS_COLORS: Record<QuoteRequestStatus, string> = {
+  NEW: "warning",
+  IN_PROGRESS: "info",
+  REPLIED: "success",
+  CLOSED: "default",
 };
 
 export type ProjectFileStatus = "DRAFT" | "CONFIRMED" | "APPROVED";
