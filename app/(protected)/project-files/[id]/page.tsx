@@ -8,7 +8,7 @@ import Divider from "@mui/material/Divider";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
-export const metadata = { title: "แก้ไขใบเสนอราคา | NBA Tech Engineer" };
+export const metadata = { title: "แก้ไขใบเสนอราคา | Demo Tech Engineer" };
 export const dynamic = "force-dynamic";
 
 export default async function ProjectFileDetailPage({

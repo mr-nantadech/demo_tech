@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
-export const metadata = { title: "สร้างใบเสนอราคา | NBA Tech Engineer" };
+export const metadata = { title: "สร้างใบเสนอราคา | Demo Tech Engineer" };
 
 export default function NewProjectFilePage() {
   return (

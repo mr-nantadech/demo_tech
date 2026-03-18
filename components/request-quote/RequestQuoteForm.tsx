@@ -95,7 +95,7 @@ export default function RequestQuoteForm() {
         <CheckCircleIcon sx={{ fontSize: 72, color: "success.main", mb: 2 }} />
         <Box sx={{ fontSize: 20, fontWeight: 700, mb: 1 }}>ส่งคำขอเรียบร้อยแล้ว</Box>
         <Box sx={{ color: "text.secondary", mb: 4 }}>
-          ทีมงานจะติดต่อกลับภายใน 1-2 วันทำการ ขอบคุณที่ไว้วางใจ NBA Tech Engineer
+          ทีมงานจะติดต่อกลับภายใน 1-2 วันทำการ ขอบคุณที่ไว้วางใจ Demo Tech Engineer
         </Box>
         <Button variant="outlined" onClick={() => { setSuccess(false); setForm({ contactName: "", companyName: "", phone: "", email: "", details: "" }); setSelectedServices([]); }}>
           ส่งคำขอใหม่

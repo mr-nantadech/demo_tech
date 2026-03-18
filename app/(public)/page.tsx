@@ -13,69 +13,47 @@ import ElectricalServicesIcon from "@mui/icons-material/ElectricalServices";
 import ConstructionIcon from "@mui/icons-material/Construction";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import HandymanIcon from "@mui/icons-material/Handyman";
+import { prisma } from "@/lib/prisma";
+import {
+  buildHomeContent,
+  defaultHomeContent,
+  HOME_CONTENT_CATEGORY,
+} from "@/lib/home-content";
 
-const services = [
-  {
-    no: 1,
-    icon: <AcUnitIcon sx={{ fontSize: 40 }} />,
-    title: "ติดตั้ง ซ่อมแซม และบำรุงรักษาระบบปรับอากาศ",
-    desc: "ให้บริการติดตั้ง ซ่อมแซม บำรุงรักษา ตรวจสอบ และปรับปรุงเครื่องปรับอากาศ ระบบทำความเย็น และระบบระบายอากาศทุกชนิด",
-    color: "#1565C0",
-  },
-  {
-    no: 2,
-    icon: <OpacityIcon sx={{ fontSize: 40 }} />,
-    title: "ล้าง ซ่อม และเติมสารทำความเย็น",
-    desc: "ให้บริการล้าง ซ่อม รีเช็ต รีชาร์จ ตรวจเช็ก และเติมสารทำความเย็นเครื่องปรับอากาศและระบบทำความเย็น",
-    color: "#0288D1",
-  },
-  {
-    no: 3,
-    icon: <ElectricalServicesIcon sx={{ fontSize: 40 }} />,
-    title: "ระบบไฟฟ้าและระบบควบคุมไฟฟ้า",
-    desc: "ให้บริการออกแบบ ติดตั้ง ซ่อมแซม และบำรุงรักษาระบบไฟฟ้า ระบบควบคุมไฟฟ้า และระบบไฟฟ้าภายในอาคาร",
-    color: "#F57C00",
-  },
-  {
-    no: 4,
-    icon: <ConstructionIcon sx={{ fontSize: 40 }} />,
-    title: "รับเหมางานระบบวิศวกรรมประกอบอาคาร",
-    desc: "รับเหมาติดตั้งงานระบบวิศวกรรมประกอบอาคาร ได้แก่ ระบบไฟฟ้า ระบบเครื่องกล ระบบปรับอากาศ และระบบที่เกี่ยวข้อง",
-    color: "#2E7D32",
-  },
-  {
-    no: 5,
-    icon: <StorefrontIcon sx={{ fontSize: 40 }} />,
-    title: "จำหน่ายเครื่องปรับอากาศและอุปกรณ์",
-    desc: "จำหน่าย จัดหา เครื่องปรับอากาศ อุปกรณ์ไฟฟ้า อุปกรณ์ทำความเย็น อะไหล่ และวัสดุที่เกี่ยวข้องกับกิจการ",
-    color: "#6A1B9A",
-  },
-  {
-    no: 6,
-    icon: <HandymanIcon sx={{ fontSize: 40 }} />,
-    title: "บริการอื่นที่เกี่ยวเนื่อง",
-    desc: "ประกอบกิจการอื่นใดที่เกี่ยวเนื่องหรือคล้ายคลึงกันกับกิจการดังกล่าว ทั้งนี้ไม่ขัดต่อกฎหมาย",
-    color: "#00695C",
-  },
+export const dynamic = "force-dynamic";
+
+const serviceIcons = [
+  <AcUnitIcon key="service-icon-1" sx={{ fontSize: 40 }} />,
+  <OpacityIcon key="service-icon-2" sx={{ fontSize: 40 }} />,
+  <ElectricalServicesIcon key="service-icon-3" sx={{ fontSize: 40 }} />,
+  <ConstructionIcon key="service-icon-4" sx={{ fontSize: 40 }} />,
+  <StorefrontIcon key="service-icon-5" sx={{ fontSize: 40 }} />,
+  <HandymanIcon key="service-icon-6" sx={{ fontSize: 40 }} />,
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const rows = await prisma.masterData.findMany({
+    where: { category: HOME_CONTENT_CATEGORY, isActive: true },
+    orderBy: { sortOrder: "asc" },
+  });
+  const content = rows.length > 0 ? buildHomeContent(rows) : defaultHomeContent;
+
   return (
     <AppShell noPadding>
       {/* Hero Slider */}
-      <HeroSlider />
+      <HeroSlider slides={content.slides} />
 
       {/* Services Section */}
       <Container maxWidth="lg" sx={{ py: 8 }}>
         <Typography variant="h4" textAlign="center" fontWeight={700} color="primary" gutterBottom>
-          บริการของเรา
+          {content.servicesTitle}
         </Typography>
         <Typography variant="body1" textAlign="center" color="text.secondary" sx={{ mb: 6 }}>
-          ให้บริการงานระบบวิศวกรรมครบวงจร โดยทีมช่างผู้เชี่ยวชาญ
+          {content.servicesSubtitle}
         </Typography>
 
         <Grid container spacing={3}>
-          {services.map((service) => (
+          {content.services.map((service, idx) => (
             <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={service.no}>
               <Card
                 sx={{
@@ -103,7 +81,7 @@ export default function HomePage() {
                         flexShrink: 0,
                       }}
                     >
-                      {service.icon}
+                      {serviceIcons[idx]}
                     </Box>
                     <Box
                       sx={{

@@ -78,7 +78,7 @@ export default function LoginForm() {
               <EngineeringIcon sx={{ fontSize: 36, color: "#fff" }} />
             </Box>
             <Typography variant="h5" fontWeight={700} color="primary">
-              NBA Tech Engineer
+              Demo Tech Engineer
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
               เข้าสู่ระบบเพื่อจัดการงาน

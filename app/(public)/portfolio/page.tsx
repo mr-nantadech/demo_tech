@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = { title: "ผลงาน | NBA Tech Engineer" };
+export const metadata = { title: "ผลงาน | Demo Tech Engineer" };
 export const dynamic = "force-dynamic";
 
 export default async function PortfolioPage() {
@@ -22,7 +22,7 @@ export default async function PortfolioPage() {
           ผลงาน
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          ผลงานที่ผ่านมาของทีม NBA Tech Engineer
+          ผลงานที่ผ่านมาของทีม Demo Tech Engineer
         </Typography>
         <Divider sx={{ mt: 2 }} />
       </Box>

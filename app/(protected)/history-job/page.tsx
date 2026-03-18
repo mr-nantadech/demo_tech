@@ -6,7 +6,7 @@ import Divider from "@mui/material/Divider";
 import LinkButton from "@/components/ui/LinkButton";
 import AddIcon from "@mui/icons-material/Add";
 
-export const metadata = { title: "ประวัติการรับงาน | NBA Tech Engineer" };
+export const metadata = { title: "ประวัติการรับงาน | Demo Tech Engineer" };
 
 export default function HistoryJobPage() {
   return (

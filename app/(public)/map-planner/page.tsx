@@ -3,7 +3,7 @@ import MapPlannerLoader from "@/components/map-planner/MapPlannerLoader";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "วางแผนเส้นทาง | NBA Tech Engineer",
+  title: "วางแผนเส้นทาง | Demo Tech Engineer",
 };
 
 export default function MapPlannerPage() {

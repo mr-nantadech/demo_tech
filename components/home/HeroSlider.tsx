@@ -7,44 +7,22 @@ import IconButton from "@mui/material/IconButton";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import Image from "next/image";
-
-interface Slide {
-  image: string;
-  title: string;
-  subtitle: string;
-  gradient: string; // fallback gradient when image is loading/missing
-}
-
-const slides: Slide[] = [
-  {
-    image: "/portfolio/slide-1.jpg",
-    title: "ติดตั้งระบบปรับอากาศ",
-    subtitle: "ให้บริการติดตั้งและบำรุงรักษาระบบทำความเย็นครบวงจร",
-    gradient: "linear-gradient(135deg, #0D47A1 0%, #1565C0 60%, #1E88E5 100%)",
-  },
-  {
-    image: "/portfolio/slide-2.jpg",
-    title: "งานระบบไฟฟ้า",
-    subtitle: "ออกแบบ ติดตั้ง และบำรุงรักษาระบบไฟฟ้าภายในอาคาร",
-    gradient: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 60%, #43A047 100%)",
-  },
-  {
-    image: "/portfolio/slide-3.jpg",
-    title: "รับเหมาระบบวิศวกรรมประกอบอาคาร",
-    subtitle: "ระบบไฟฟ้า ระบบเครื่องกล ระบบปรับอากาศ และระบบที่เกี่ยวข้อง",
-    gradient: "linear-gradient(135deg, #4A148C 0%, #6A1B9A 60%, #8E24AA 100%)",
-  },
-  {
-    image: "/portfolio/slide-4.jpg",
-    title: "เติมสารทำความเย็นและตรวจเช็กระบบ",
-    subtitle: "บริการล้าง ซ่อม รีชาร์จ โดยช่างผู้เชี่ยวชาญ",
-    gradient: "linear-gradient(135deg, #004D40 0%, #00695C 60%, #00897B 100%)",
-  },
-];
+import {
+  defaultHomeContent,
+  type HomeSlideContent,
+} from "@/lib/home-content";
 
 const INTERVAL_MS = 5000;
 
-export default function HeroSlider() {
+export default function HeroSlider({
+  slides = defaultHomeContent.slides,
+}: {
+  slides?: HomeSlideContent[];
+}) {
+  const safeSlides =
+    Array.isArray(slides) && slides.length > 0
+      ? slides
+      : defaultHomeContent.slides;
   const [current, setCurrent] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const [fade, setFade] = useState(true);
@@ -53,11 +31,11 @@ export default function HeroSlider() {
     (index: number) => {
       setFade(false);
       setTimeout(() => {
-        setCurrent((index + slides.length) % slides.length);
+        setCurrent((index + safeSlides.length) % safeSlides.length);
         setFade(true);
       }, 250);
     },
-    []
+    [safeSlides.length]
   );
 
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
@@ -68,7 +46,7 @@ export default function HeroSlider() {
     return () => clearInterval(timer);
   }, [next]);
 
-  const slide = slides[current];
+  const slide = safeSlides[current] ?? safeSlides[0];
   const useGradient = imgErrors[current];
 
   return (
@@ -177,7 +155,7 @@ export default function HeroSlider() {
           gap: 1,
         }}
       >
-        {slides.map((_, i) => (
+        {safeSlides.map((_, i) => (
           <Box
             key={i}
             onClick={() => goTo(i)}
@@ -204,7 +182,7 @@ export default function HeroSlider() {
           fontWeight: 500,
         }}
       >
-        {current + 1} / {slides.length}
+        {current + 1} / {safeSlides.length}
       </Box>
     </Box>
   );

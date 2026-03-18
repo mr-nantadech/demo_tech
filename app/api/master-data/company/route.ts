@@ -9,14 +9,10 @@ const COMPANY_KEYS = {
   registrationNo: "REGISTRATION_NO",
   address: "ADDRESS",
   phone: "PHONE",
+  logoUrl: "LOGO_URL",
 } as const;
 
 export async function GET() {
-  const session = await auth();
-  if (!session) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const rows = await prisma.masterData.findMany({
     where: {
       category: CATEGORY,
@@ -32,6 +28,7 @@ export async function GET() {
     registrationNo: byKey.get(COMPANY_KEYS.registrationNo) ?? "",
     address: byKey.get(COMPANY_KEYS.address) ?? "",
     phone: byKey.get(COMPANY_KEYS.phone) ?? "",
+    logoUrl: byKey.get(COMPANY_KEYS.logoUrl) ?? "",
   });
 }
 
@@ -46,6 +43,7 @@ export async function PUT(req: NextRequest) {
   const registrationNo = (body?.registrationNo as string | undefined)?.trim() ?? "";
   const address = (body?.address as string | undefined)?.trim() ?? "";
   const phone = (body?.phone as string | undefined)?.trim() ?? "";
+  const logoUrl = (body?.logoUrl as string | undefined)?.trim() ?? "";
 
   if (!name || !registrationNo || !address || !phone) {
     return NextResponse.json(
@@ -74,6 +72,11 @@ export async function PUT(req: NextRequest) {
       where: { category_key: { category: CATEGORY, key: COMPANY_KEYS.phone } },
       update: { value: phone, label: "เบอร์โทรศัพท์", sortOrder: 4, isActive: true },
       create: { category: CATEGORY, key: COMPANY_KEYS.phone, value: phone, label: "เบอร์โทรศัพท์", sortOrder: 4, isActive: true },
+    });
+    await prisma.masterData.upsert({
+      where: { category_key: { category: CATEGORY, key: COMPANY_KEYS.logoUrl } },
+      update: { value: logoUrl, label: "โลโก้บริษัท", sortOrder: 5, isActive: true },
+      create: { category: CATEGORY, key: COMPANY_KEYS.logoUrl, value: logoUrl, label: "โลโก้บริษัท", sortOrder: 5, isActive: true },
     });
   } catch (error) {
     console.error("company PUT error:", error);

@@ -10,7 +10,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-export const metadata = { title: "ขอใบเสนอราคา | NBA Tech Engineer" };
+export const metadata = { title: "ขอใบเสนอราคา | Demo Tech Engineer" };
 
 export default function RequestQuotePage() {
   return (

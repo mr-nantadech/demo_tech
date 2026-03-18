@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
@@ -11,12 +11,15 @@ import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
+import NextImage from "next/image";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 interface CompanyProfile {
   name: string;
   registrationNo: string;
   address: string;
   phone: string;
+  logoUrl: string;
 }
 
 const defaultForm: CompanyProfile = {
@@ -24,13 +27,16 @@ const defaultForm: CompanyProfile = {
   registrationNo: "",
   address: "",
   phone: "",
+  logoUrl: "",
 };
 
 export default function CompanyProfileForm() {
   const [form, setForm] = useState<CompanyProfile>(defaultForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [snackbar, setSnackbar] = useState<{ open: boolean; message: string; severity: "success" | "error" }>({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
@@ -45,6 +51,7 @@ export default function CompanyProfileForm() {
           registrationNo: data.registrationNo ?? "",
           address: data.address ?? "",
           phone: data.phone ?? "",
+          logoUrl: data.logoUrl ?? "",
         });
       } else {
         setError("ไม่สามารถโหลดข้อมูลบริษัทได้");
@@ -76,6 +83,39 @@ export default function CompanyProfileForm() {
     setSnackbar({ open: true, message: "บันทึกข้อมูลบริษัทเรียบร้อยแล้ว", severity: "success" });
   };
 
+  const handleUploadLogo = async (file: File | null) => {
+    if (!file) return;
+
+    setUploadingLogo(true);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch("/api/master-data/company/upload-logo", {
+      method: "POST",
+      body: formData,
+    });
+
+    setUploadingLogo(false);
+
+    if (!res.ok) {
+      const data = (await res.json()) as { error?: string };
+      setSnackbar({
+        open: true,
+        message: data.error || "ไม่สามารถอัปโหลดโลโก้ได้",
+        severity: "error",
+      });
+      return;
+    }
+
+    const data = (await res.json()) as { url: string };
+    setForm((prev) => ({ ...prev, logoUrl: data.url }));
+    setSnackbar({
+      open: true,
+      message: "อัปโหลดโลโก้เรียบร้อยแล้ว",
+      severity: "success",
+    });
+  };
+
   return (
     <Card>
       <Snackbar
@@ -102,6 +142,64 @@ export default function CompanyProfileForm() {
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
             <Grid container spacing={2}>
+              <Grid size={12}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 2,
+                    alignItems: { xs: "stretch", md: "center" },
+                    flexDirection: { xs: "column", md: "row" },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      position: "relative",
+                      width: { xs: "100%", md: 260 },
+                      height: 140,
+                      borderRadius: 2,
+                      overflow: "hidden",
+                      border: "1px solid",
+                      borderColor: "divider",
+                      bgcolor: "grey.100",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <NextImage
+                      src={form.logoUrl || "/logo_corp.webp?v=20260319"}
+                      alt="Company logo"
+                      fill
+                      sizes="260px"
+                      style={{ objectFit: "contain", padding: 12 }}
+                      unoptimized={form.logoUrl.startsWith("http")}
+                    />
+                  </Box>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.25 }}>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      style={{ display: "none" }}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] ?? null;
+                        void handleUploadLogo(file);
+                        e.currentTarget.value = "";
+                      }}
+                    />
+                    <Button
+                      variant="outlined"
+                      startIcon={<CloudUploadIcon />}
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingLogo}
+                      sx={{ alignSelf: "flex-start" }}
+                    >
+                      {uploadingLogo ? "กำลังอัปโหลด..." : "อัปโหลดโลโก้"}
+                    </Button>
+                    <Typography variant="caption" color="text.secondary">
+                      อัปโหลดแล้วระบบจะบันทึก URL ลงข้อมูลบริษัท และ navbar จะใช้โลโก้นี้
+                    </Typography>
+                  </Box>
+                </Box>
+              </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                   fullWidth
@@ -140,6 +238,15 @@ export default function CompanyProfileForm() {
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
                   required
+                />
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <TextField
+                  fullWidth
+                  label="Logo URL"
+                  value={form.logoUrl}
+                  onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
+                  helperText="สามารถวาง URL เองได้ หรือใช้อัปโหลดด้านบน"
                 />
               </Grid>
             </Grid>

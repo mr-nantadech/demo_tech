@@ -15,7 +15,7 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import EmailIcon from "@mui/icons-material/Email";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = { title: "เกี่ยวกับเรา | NBA Tech Engineer" };
+export const metadata = { title: "เกี่ยวกับเรา | Demo Tech Engineer" };
 export const dynamic = "force-dynamic";
 
 export default async function AboutPage() {
@@ -51,7 +51,7 @@ export default async function AboutPage() {
           เกี่ยวกับเรา
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          NBA Tech Engineer - ผู้เชี่ยวชาญด้านวิศวกรรมไฟฟ้าและระบบอัตโนมัติ
+          Demo Tech Engineer - ผู้เชี่ยวชาญด้านวิศวกรรมไฟฟ้าและระบบอัตโนมัติ
         </Typography>
         <Divider sx={{ mt: 2 }} />
       </Box>
@@ -67,7 +67,7 @@ export default async function AboutPage() {
                 </Avatar>
                 <Box>
                   <Typography variant="h5" fontWeight={700}>
-                    {company.name || "NBA Tech Engineer"}
+                    {company.name || "Demo Tech Engineer"}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     บริษัทวิศวกรรมชั้นนำ

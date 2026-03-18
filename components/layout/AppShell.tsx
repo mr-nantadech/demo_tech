@@ -38,7 +38,7 @@ export default function AppShell({
           borderColor: "divider",
         }}
       >
-        © {new Date().getFullYear()} NBA Tech Engineer. All rights reserved.
+        © {new Date().getFullYear()} Demo Tech Engineer. All rights reserved.
       </Box>
     </Box>
   );

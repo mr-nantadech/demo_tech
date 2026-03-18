@@ -1,14 +1,24 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaNeonHttp } from "@prisma/adapter-neon";
+import { neonConfig } from "@neondatabase/serverless";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 import { config } from "dotenv";
+import ws from "ws";
 
 config({ path: ".env.local" });
 
 function createClient() {
-  const connectionString = process.env.DATABASE_URL!;
-  if (!connectionString) throw new Error("DATABASE_URL is not set in .env.local");
-  return new PrismaClient({ adapter: new PrismaNeonHttp(connectionString, {}) });
+  const connectionString =
+    process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL;
+
+  if (!connectionString) {
+    throw new Error("DATABASE_URL or DATABASE_URL_UNPOOLED is not set in .env.local");
+  }
+
+  neonConfig.webSocketConstructor = ws;
+  const adapter = new PrismaNeon({ connectionString });
+
+  return new PrismaClient({ adapter });
 }
 
 const prisma = createClient();

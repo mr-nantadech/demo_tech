@@ -16,7 +16,7 @@ const sarabun = Sarabun({
 });
 
 export const metadata: Metadata = {
-  title: "NBA Tech Engineer",
+  title: "Demo Tech Engineer",
   description: "ระบบจัดการใบเสนอราคาและประวัติการรับงาน",
 };
 

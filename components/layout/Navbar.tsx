@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,6 +36,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import RouteIcon from "@mui/icons-material/Route";
 import PhotoLibraryIcon from "@mui/icons-material/PhotoLibrary";
 
+const defaultLogoSrc = "/logo_corp.webp?v=20260319";
+
 const publicNavLinks = [
   { label: "หน้าแรก", href: "/", icon: <HomeIcon fontSize="small" /> },
   { label: "ผลงาน", href: "/portfolio", icon: <WorkIcon fontSize="small" /> },
@@ -56,6 +58,31 @@ export default function Navbar() {
   const pathname = usePathname();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [logoSrc, setLogoSrc] = useState(defaultLogoSrc);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadCompany = async () => {
+      try {
+        const res = await fetch("/api/master-data/company", {
+          signal: controller.signal,
+          cache: "no-store",
+        });
+        if (!res.ok) return;
+
+        const data = (await res.json()) as { logoUrl?: string };
+        if (data.logoUrl?.trim()) {
+          setLogoSrc(data.logoUrl.trim());
+        }
+      } catch {
+        // keep fallback logo
+      }
+    };
+
+    void loadCompany();
+    return () => controller.abort();
+  }, []);
 
   const handleMenuOpen = (e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
@@ -104,7 +131,7 @@ export default function Navbar() {
             }}
           >
             <Image
-              src="/logo_corp.webp"
+              src={logoSrc}
               alt="NBA Tech"
               width={70}
               height={36}
@@ -231,7 +258,7 @@ export default function Navbar() {
           }}
         >
           <Image
-            src="/logo_corp.webp"
+            src={logoSrc}
             alt="NBA Tech"
             width={70}
             height={32}

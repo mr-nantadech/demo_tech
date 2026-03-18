@@ -7,7 +7,7 @@ import LinkButton from "@/components/ui/LinkButton";
 import AddIcon from "@mui/icons-material/Add";
 import { prisma } from "@/lib/prisma";
 
-export const metadata = { title: "ใบเสนอราคา | NBA Tech Engineer" };
+export const metadata = { title: "ใบเสนอราคา | Demo Tech Engineer" };
 export const dynamic = "force-dynamic";
 
 export default async function ProjectFilesPage() {

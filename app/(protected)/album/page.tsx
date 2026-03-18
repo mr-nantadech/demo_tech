@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 
-export const metadata = { title: "จัดการอัลบั้ม | NBA Tech Engineer" };
+export const metadata = { title: "จัดการอัลบั้ม | Demo Tech Engineer" };
 
 export default function AlbumPage() {
   return (
